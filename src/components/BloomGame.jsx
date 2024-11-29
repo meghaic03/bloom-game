@@ -4,23 +4,19 @@ import { Button } from "./ui/button"
 import { Heart, Star, CloudRain, Cat, TreePine } from 'lucide-react';
 import GumiFeedingMinigame from './GumiFeedingMinigame';
 import MedicationMinigame from './MedicationMinigame'; 
-import bedroomBackground from '/src/assets/bedroom.png';
-
-
-
 
 
 const BloomGame = () => {
     const [showFeedingMinigame, setShowFeedingMinigame] = useState(false);
     const [showMedicationMinigame, setShowMedicationMinigame] = useState(false);
     const [showDoorScene, setShowDoorScene] = useState(false);
+    const [deadImageIndex, setDeadImageIndex] = useState(0);
+
     const [gameStarted, setGameStarted] = useState(false);
     const [playerName, setPlayerName] = useState('');
     const [nameEntered, setNameEntered] = useState(false);
     const [currentScene, setCurrentScene] = useState('bedroom');
     const [inventory, setInventory] = useState([]);
-    const [opacity, setOpacity] = useState(1);
-    const [transitioning, setTransitioning] = useState(false);
     const [gameState, setGameState] = useState({
       fedCat: false,
       tookMedicine: false,
@@ -29,6 +25,8 @@ const BloomGame = () => {
       triedPuzzle: false,
       forestHealth: 0,
     });
+
+   
 
     const handleKeyPress = (e) => {
         if (e.key.toLowerCase() === 'x') {
@@ -125,14 +123,35 @@ const BloomGame = () => {
                 hidden: gameState.tookMedicine
               },
               { 
-                text: "Open door to leave the room",
-                nextScene: "forest_entry",
+                text: "Open door",
+                action: () => {
+                  // Start with first image
+                  setCurrentScene('dead_sequence');
+                  setDeadImageIndex(0);
+                  
+                  // Schedule the sequence of images
+                  setTimeout(() => setDeadImageIndex(1), 400);
+                  setTimeout(() => setDeadImageIndex(2), 800);
+                  setTimeout(() => setDeadImageIndex(3), 1200);
+                  setTimeout(() => {
+                    setCurrentScene('forest_entry');
+                  }, 1600);
+                },
                 hidden: !gameState.fedCat || !gameState.tookMedicine,
               }
             ]
           },
+    
+          
+      dead_sequence: {
+        image: `url('/src/assets/dead${deadImageIndex + 1}.png')`,
+        text: "",
+        choices: [],
+    },
+
+
       forest_entry: {
-        image: "Mystical Forest Entrance",
+        image: "url('/src/assets/dead5.png')",
         text: "'[name], the forest needs your help. Plants are withering and we don't know why.' A distant voice echoes.",
         choices: [
           { text: "Enter the forest", nextScene: "meet_sadness" }
@@ -319,24 +338,13 @@ const BloomGame = () => {
     };
   
     const handleChoice = (choice) => {
-        if (transitioning) return;
-        
         if (choice.action) {
           choice.action();
         }
         if (choice.nextScene) {
-          setTransitioning(true);
-          setOpacity(0);
-          
-          setTimeout(() => {
-            setCurrentScene(choice.nextScene);
-            setTimeout(() => {
-              setOpacity(1);
-              setTransitioning(false);
-            }, 300);
-          }, 300);
+          setCurrentScene(choice.nextScene);
         }
-      };
+    };
   
       const currentSceneData = scenes[currentScene];
   
@@ -357,7 +365,7 @@ const BloomGame = () => {
                 <p className="text-md mb-8 font-['Cedarville_Cursive'] text-white">a story game</p>
                 <Button 
                   onClick={() => setGameStarted(true)}
-                  className="bg-[#E4D1B6]/90 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Play
                 </Button>
@@ -392,7 +400,7 @@ const BloomGame = () => {
                 <Button 
                   type="submit"
                   disabled={!playerName.trim()}
-                  className="bg-[#E4D1B6]/90 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Begin
                 </Button>
@@ -468,10 +476,21 @@ const BloomGame = () => {
           </div>
         )}
 
-      {/* Background Image Description */}
-        <div className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm"
-            style={currentScene === 'bedroom' ? { backgroundImage: currentSceneData.image, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-        {currentScene !== 'bedroom' && <p className="text-center px-4">{currentSceneData.image}</p>}
+        {/* Background Image Description */}
+        <div 
+        className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm"
+        style={{
+            backgroundImage: currentScene === 'bedroom' || currentScene === 'dead_sequence' || currentScene === 'forest_entry' 
+            ? currentSceneData.image 
+            : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            imageRendering: 'pixelated'
+        }}
+        >
+        {(currentScene !== 'bedroom' && currentScene !== 'dead_sequence' && currentScene !== 'forest_entry') && 
+            <p className="text-center px-4">{currentSceneData.image}</p>
+        }
         </div>
 
         {/* Bottom Section - Description and Choices */}
@@ -508,8 +527,7 @@ const BloomGame = () => {
                 <Button 
                     key={index}
                     onClick={() => handleChoice(choice)}
-                    disabled={transitioning}
-                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:bg-[#E4D1B6]/90 text-xs py-1 h-auto font-['Cedarville_Cursive']"
+                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-xs py-1 h-auto font-['Cedarville_Cursive']"
                     >
                     {processText(choice.text)}
                 </Button>
