@@ -6,11 +6,12 @@ import emptyFood from './emptyfood.png';
 import kibble from './kibble.png';
 import chicken from './chicken.png';
 import tuna from './tuna.png';
+import feedgumiBackground from './feedgumi.png';
 
 const GameContainer = ({ children }) => (
   <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', backgroundColor: '#CCB093' }}>
     <div style={{ width: '960px', margin: '0 auto' }}>
-      <div className="h-[540px] relative overflow-hidden bg-gray-200">
+      <div className="h-[540px] relative overflow-hidden">
         {children}
       </div>
     </div>
@@ -59,7 +60,6 @@ const GumiFeedingMinigame = ({ onComplete }) => {
     const bowl = bowlRef.current;
     const bowlRect = bowl.getBoundingClientRect();
 
-    // Check if food is dropped in bowl
     if (
       e.clientX >= bowlRect.left &&
       e.clientX <= bowlRect.right &&
@@ -92,18 +92,24 @@ const GumiFeedingMinigame = ({ onComplete }) => {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center">
+      {/* Background Image */}
+      <img 
+        src={feedgumiBackground} 
+        alt="Background" 
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      
       <div className="relative h-[540px] w-full">
         {/* Food bin */}
-        <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-[#8C5751]/20 p-4 rounded-lg border-2 border-[#8C5751] border-dashed">
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-[#8C5751]/20 p-2 rounded-lg border-2 border-[#8C5751] border-dashed">
           {foodItems.map(item => (
             <div
               key={item.id}
-              className={`py-2 px-4 mb-2 bg-[#E4D1B6] text-[#8C5751] rounded cursor-move font-['Cedarville_Cursive'] 
+              className={`py-1 px-3 mb-1 last:mb-0 bg-[#E4D1B6] text-[#8C5751] rounded cursor-move font-['Cedarville_Cursive'] text-center
                 ${isDragging && draggedItem?.id === item.id ? 'opacity-50' : ''}
                 ${bowlContents[item.name] ? 'opacity-50 cursor-default' : ''}`}
               onMouseDown={(e) => !bowlContents[item.name] && handleDragStart(e, item)}
             >
-              <img src={item.image} alt={item.name} className="w-8 h-8 object-contain inline-block mr-2" />
               {item.name}
             </div>
           ))}
@@ -113,7 +119,7 @@ const GumiFeedingMinigame = ({ onComplete }) => {
         <div
           ref={bowlRef}
           id="cat-bowl"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48"
         >
           <img src={emptyFood} alt="Empty Food Bowl" className="w-full h-full object-contain" />
           {Object.entries(bowlContents).map(([food, isAdded], index) => (
@@ -122,9 +128,9 @@ const GumiFeedingMinigame = ({ onComplete }) => {
                 key={food}
                 src={foodItems.find(item => item.name === food).image}
                 alt={food}
-                className="w-32 h-32 object-contain absolute"
+                className="w-48 h-48 object-contain absolute"
                 style={{
-                  top: `${index * 33.33}%`
+                  top: `${index}%`
                 }}
               />
             )
@@ -134,13 +140,12 @@ const GumiFeedingMinigame = ({ onComplete }) => {
         {/* Dragged item */}
         {isDragging && draggedItem && (
           <div
-            className="fixed pointer-events-none bg-[#E4D1B6] text-[#8C5751] py-2 px-4 rounded font-['Cedarville_Cursive']"
+            className="fixed pointer-events-none bg-[#E4D1B6] text-[#8C5751] py-1 px-3 rounded font-['Cedarville_Cursive']"
             style={{
               left: mousePos.x - 50,
               top: mousePos.y - 20,
             }}
           >
-            <img src={draggedItem.image} alt={draggedItem.name} className="w-8 h-8 object-contain inline-block mr-2" />
             {draggedItem.name}
           </div>
         )}

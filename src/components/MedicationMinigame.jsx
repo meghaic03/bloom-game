@@ -72,15 +72,15 @@ const MedicationMinigame = ({ onComplete }) => {
       backgroundPosition: "center"
     }}>
       <div className="relative h-[540px] w-full">
-        {/* Target Area - now centered and without border */}
+        {/* Target Area - now doubled in height */}
         <div 
           id="target-area"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-32 w-32 flex items-center justify-center"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-32 flex items-center justify-center"
         >
           {taskComplete ? (
             <div className="flex items-center justify-center gap-4">
               <img src="/src/assets/pills.png" alt="Pill" className="w-12 h-12 opacity-0" />
-              <img src="/src/assets/emptywater.png" alt="Water" className="w-12 h-12 object-contain opacity-0" />
+              <img src="/src/assets/emptywater.png" alt="Water" className="w-12 h-12 object-contain opacity-100" />
             </div>
           ) : (
             <>

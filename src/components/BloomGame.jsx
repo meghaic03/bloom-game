@@ -4,6 +4,9 @@ import { Button } from "./ui/button"
 import { Heart, Star, CloudRain, Cat, TreePine } from 'lucide-react';
 import GumiFeedingMinigame from './GumiFeedingMinigame';
 import MedicationMinigame from './MedicationMinigame'; 
+import bedroomBackground from '/src/assets/bedroom.png';
+
+
 
 
 
@@ -102,29 +105,29 @@ const BloomGame = () => {
 
 
     const scenes = {
-      bedroom: {
-        image: "Bedroom Scene",
-        text: !gameState.fedCat || !gameState.tookMedicine 
-            ? "Good morning [name]!"
-            : "",
-        choices: [
-            { 
-            text: "Feed Gumi", 
-            action: () => setShowFeedingMinigame(true),
-            hidden: gameState.fedCat
-            },
-            { 
-            text: "Take medication", 
-            action: () => setShowMedicationMinigame(true),
-            hidden: gameState.tookMedicine
-            },
-            { 
-            text: "Open door",
-            nextScene: "forest_entry",
-            hidden: !gameState.fedCat || !gameState.tookMedicine,
-            }
-        ]
-},
+        bedroom: {
+          image: "url('/src/assets/bedroom.png')",  // Changed this line only
+          text: !gameState.fedCat || !gameState.tookMedicine 
+              ? "Good morning [name]!"
+              : "",
+          choices: [
+              { 
+              text: "Feed Gumi", 
+              action: () => setShowFeedingMinigame(true),
+              hidden: gameState.fedCat
+              },
+              { 
+              text: "Take medication", 
+              action: () => setShowMedicationMinigame(true),
+              hidden: gameState.tookMedicine
+              },
+              { 
+              text: "Open door",
+              nextScene: "forest_entry",
+              hidden: !gameState.fedCat || !gameState.tookMedicine,
+              }
+          ]
+        },
       forest_entry: {
         image: "Mystical Forest Entrance",
         text: "'[name], the forest needs your help. Plants are withering and we don't know why.' A distant voice echoes.",
@@ -351,7 +354,7 @@ const BloomGame = () => {
                 <p className="text-md mb-8 font-['Cedarville_Cursive'] text-white">a story game</p>
                 <Button 
                   onClick={() => setGameStarted(true)}
-                  className="bg-[#E4D1B6]/80 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Play
                 </Button>
@@ -379,14 +382,14 @@ const BloomGame = () => {
                   type="text"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-64 text-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-[#8C5751] border-dashed text-[#8C5751] font-['Cedarville_Cursive']"
+                  className="w-64 text-center bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-[#8C5751] border-dashed text-[#8C5751] font-['Cedarville_Cursive']"
                   placeholder="Enter your name"
                   autoFocus
                 />
                 <Button 
                   type="submit"
                   disabled={!playerName.trim()}
-                  className="bg-[#E4D1B6]/80 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Begin
                 </Button>
@@ -460,9 +463,10 @@ const BloomGame = () => {
           </div>
         )}
 
-        {/* Background Image Description */}
-        <div className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm">
-          <p className="text-center px-4">{currentSceneData.image}</p>
+      {/* Background Image Description */}
+        <div className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm"
+            style={currentScene === 'bedroom' ? { backgroundImage: currentSceneData.image, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+        {currentScene !== 'bedroom' && <p className="text-center px-4">{currentSceneData.image}</p>}
         </div>
 
         {/* Bottom Section - Description and Choices */}
@@ -474,7 +478,7 @@ const BloomGame = () => {
                 <p className="text-sm font-['Cedarville_Cursive']">built by meghai</p>
             </div>
             ) : currentSceneData.text ? (
-            <div className="bg-[#E4D1B6]/80 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
+            <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
                 <p className="text-sm text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
                 {processText(currentSceneData.text)}
                 </p>
@@ -489,7 +493,7 @@ const BloomGame = () => {
                   <Button 
                     key={index}
                     disabled
-                    className="w-full bg-[#E4D1B6]/80 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm text-xs py-1 h-auto"
+                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm text-xs py-1 h-auto"
                   >
                     {choice.requirementText}
                   </Button>
@@ -500,7 +504,7 @@ const BloomGame = () => {
                     key={index}
                     onClick={() => handleChoice(choice)}
                     disabled={transitioning}
-                    className="w-full bg-[#E4D1B6]/80 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:bg-[#E4D1B6]/90 text-xs py-1 h-auto font-['Cedarville_Cursive']"
+                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:bg-[#E4D1B6]/90 text-xs py-1 h-auto font-['Cedarville_Cursive']"
                     >
                     {processText(choice.text)}
                 </Button>
