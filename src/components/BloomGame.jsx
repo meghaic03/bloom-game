@@ -5,6 +5,15 @@ import { Heart, Star, CloudRain, Cat, TreePine } from 'lucide-react';
 import GumiFeedingMinigame from './GumiFeedingMinigame';
 import MedicationMinigame from './MedicationMinigame'; 
 
+import bedroomImage from '/src/assets/bedroom.png';
+import doorImage from '/src/assets/door.png';
+import dead1Image from '/src/assets/dead1.png';
+import dead2Image from '/src/assets/dead2.png';
+import dead3Image from '/src/assets/dead3.png';
+import dead4Image from '/src/assets/dead4.png';
+import dead5Image from '/src/assets/dead5.png';
+import titleImage from '/src/assets/title.png';
+
 
 const BloomGame = () => {
     const [showFeedingMinigame, setShowFeedingMinigame] = useState(false);
@@ -106,8 +115,8 @@ const BloomGame = () => {
     const scenes = {
         bedroom: {
             image: (gameState.fedCat && gameState.tookMedicine) 
-              ? "url('/src/assets/door.png')" 
-              : "url('/src/assets/bedroom.png')",
+              ? `url(${doorImage})`
+              : `url(${bedroomImage})`,
             text: (gameState.fedCat && gameState.tookMedicine)
               ? "You hear peculiar sounds coming from outside your door."
               : "Good morning [name]!",
@@ -144,42 +153,24 @@ const BloomGame = () => {
     
           
       dead_sequence: {
-        image: `url('/src/assets/dead${deadImageIndex + 1}.png')`,
+        image: `url(${
+            deadImageIndex === 0 ? dead1Image :
+            deadImageIndex === 1 ? dead2Image :
+            deadImageIndex === 2 ? dead3Image :
+            dead4Image
+        })`,
         text: "",
         choices: [],
     },
 
 
       forest_entry: {
-        image: "url('/src/assets/dead5.png')",
+        image: `url(${dead5Image})`,
         text: "'[name], the forest needs your help. Plants are withering and we don't know why.' A distant voice echoes.",
         choices: [
           { 
             text: "Enter the forest", 
-            action: () => setCurrentScene('coming_soon')
-          }
-        ]
-      },
-
-      coming_soon: {
-        image: "",  // You can keep the same background
-        text: "Coming soon...",
-        choices: [
-          { 
-            text: "Return to title", 
-            action: () => {
-              setGameStarted(false);
-              setNameEntered(false);
-              setPlayerName('');
-              setGameState({
-                fedCat: false,
-                tookMedicine: false,
-                triedFlowers: false,
-                triedMusic: false,
-                triedPuzzle: false,
-                forestHealth: 0,
-              });
-            }
+            action: () => setCurrentScene('meet_sadness')
           }
         ]
       },
@@ -382,7 +373,7 @@ const BloomGame = () => {
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-cover bg-center"
               style={{ 
-                backgroundImage: "url('/src/assets/title.png')" 
+                backgroundImage: `url(${titleImage})` 
               }}
             >
               {/* Optional overlay to ensure text remains readable */}
@@ -409,7 +400,7 @@ const BloomGame = () => {
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-cover bg-center"
               style={{ 
-                backgroundImage: "url('/src/assets/title.png')" 
+                backgroundImage: `url(${titleImage})`
               }}
             >
               {/* Optional overlay to ensure text remains readable 

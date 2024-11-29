@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "./ui/button";
 
+import medicationBgImage from '../assets/medication-bg.png';
+import pillsImage from '../assets/pills.png';
+import emptyWaterImage from '../assets/emptywater.png';
+import fullWaterImage from '../assets/fullwater.png';
+
+
 const MedicationMinigame = ({ onComplete }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState(null);
@@ -67,7 +73,7 @@ const MedicationMinigame = ({ onComplete }) => {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center" style={{
-      backgroundImage: "url('/src/assets/medication-bg.png')",
+      backgroundImage: `url(${medicationBgImage})`,
       backgroundSize: "cover",
       backgroundPosition: "center"
     }}>
@@ -79,16 +85,16 @@ const MedicationMinigame = ({ onComplete }) => {
         >
           {taskComplete ? (
             <div className="flex items-center justify-center gap-4">
-              <img src="/src/assets/pills.png" alt="Pill" className="w-12 h-12 opacity-0" />
-              <img src="/src/assets/emptywater.png" alt="Water" className="w-12 h-12 object-contain opacity-100" />
+             <img src={pillsImage} alt="Pill" className="w-12 h-12 opacity-0" />
+             <img src={emptyWaterImage} alt="Water" className="w-12 h-12 object-contain opacity-100" />
             </div>
           ) : (
             <>
               {hasPill && (
-                <img src="/src/assets/pills.png" alt="Pill" className="w-12 h-12 transition-opacity duration-300" style={{ opacity: hasPill ? 0 : 1 }} />
+                <img src={pillsImage} alt="Pill" className="w-12 h-12 transition-opacity duration-300" style={{ opacity: hasPill ? 0 : 1 }} />
               )}
               {hasWater && (
-                <img src="/src/assets/emptywater.png" alt="Water" className="w-12 h-12 object-contain transition-opacity duration-300" style={{ opacity: hasWater ? 0 : 1 }} />
+                <img src={emptyWaterImage} alt="Water" className="w-12 h-12 object-contain transition-opacity duration-300" style={{ opacity: hasWater ? 0 : 1 }} />
               )}
             </>
           )}
@@ -102,7 +108,7 @@ const MedicationMinigame = ({ onComplete }) => {
               className="bg-[#8C5751]/20 p-4 rounded-lg border-2 border-[#8C5751] border-dashed cursor-move flex items-center justify-center"
               onMouseDown={(e) => handleDragStart(e, 'pill')}
             >
-              <img src="/src/assets/pills.png" alt="Pill" className="w-12 h-12" />
+              <img src={pillsImage} alt="Pill" className="w-12 h-12" />
             </div>
           )}
           
@@ -112,7 +118,7 @@ const MedicationMinigame = ({ onComplete }) => {
               className="bg-[#8C5751]/20 p-4 rounded-lg border-2 border-[#8C5751] border-dashed cursor-move flex items-center justify-center"
               onMouseDown={(e) => handleDragStart(e, 'water')}
             >
-              <img src="/src/assets/fullwater.png" alt="Water" className="w-12 h-12 object-contain" />
+              <img src={fullWaterImage} alt="Water" className="w-12 h-12 object-contain" />
             </div>
           )}
         </div>
@@ -127,9 +133,9 @@ const MedicationMinigame = ({ onComplete }) => {
             }}
           >
             {draggedItem === 'pill' ? (
-              <img src="/src/assets/pills.png" alt="Pill" className="w-12 h-12" />
+              <img src={pillsImage} alt="Pill" className="w-12 h-12" />
             ) : (
-              <img src="/src/assets/fullwater.png" alt="Water" className="w-12 h-12 object-contain" />
+              <img src={fullWaterImage} alt="Water" className="w-12 h-12 object-contain" />
             )}
           </div>
         )}
