@@ -122,7 +122,7 @@ const BloomGame = () => {
               hidden: gameState.tookMedicine
               },
               { 
-              text: "Open door",
+              text: "Open door to leave the room",
               nextScene: "forest_entry",
               hidden: !gameState.fedCat || !gameState.tookMedicine,
               }
@@ -473,9 +473,9 @@ const BloomGame = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
           {/* Description Text */}
           {currentScene === 'credits' ? (
-            <div className="flex flex-col items-center text-2xl font-bold">
+            <div className="flex flex-col items-center text-xl font-bold">
                 <h1 className="mb-2 font-['Cedarville_Cursive']">thank you for playing</h1>
-                <p className="text-sm font-['Cedarville_Cursive']">built by meghai</p>
+                <p className="text-lg font-['Cedarville_Cursive']">built by meghai</p>
             </div>
             ) : currentSceneData.text ? (
             <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">

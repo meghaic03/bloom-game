@@ -117,24 +117,24 @@ const GumiFeedingMinigame = ({ onComplete }) => {
 
         {/* Bowl */}
         <div
-          ref={bowlRef}
-          id="cat-bowl"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48"
+        ref={bowlRef}
+        id="cat-bowl"
+        className="absolute left-[40%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48"
         >
-          <img src={emptyFood} alt="Empty Food Bowl" className="w-full h-full object-contain" />
-          {Object.entries(bowlContents).map(([food, isAdded], index) => (
+        <img src={emptyFood} alt="Empty Food Bowl" className="w-full h-full object-contain" />
+        {Object.entries(bowlContents).map(([food, isAdded], index) => (
             isAdded && (
-              <img
+            <img
                 key={food}
                 src={foodItems.find(item => item.name === food).image}
                 alt={food}
                 className="w-48 h-48 object-contain absolute"
                 style={{
-                  top: `${index}%`
+                top: `${index}%`
                 }}
-              />
+            />
             )
-          ))}
+        ))}
         </div>
 
         {/* Dragged item */}
