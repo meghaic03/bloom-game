@@ -154,9 +154,37 @@ const BloomGame = () => {
         image: "url('/src/assets/dead5.png')",
         text: "'[name], the forest needs your help. Plants are withering and we don't know why.' A distant voice echoes.",
         choices: [
-          { text: "Enter the forest", nextScene: "meet_sadness" }
+          { 
+            text: "Enter the forest", 
+            action: () => setCurrentScene('coming_soon')
+          }
         ]
       },
+
+      coming_soon: {
+        image: "",  // You can keep the same background
+        text: "Coming soon...",
+        choices: [
+          { 
+            text: "Return to title", 
+            action: () => {
+              setGameStarted(false);
+              setNameEntered(false);
+              setPlayerName('');
+              setGameState({
+                fedCat: false,
+                tookMedicine: false,
+                triedFlowers: false,
+                triedMusic: false,
+                triedPuzzle: false,
+                forestHealth: 0,
+              });
+            }
+          }
+        ]
+      },
+
+
       meet_sadness: {
         image: "Blue Spirit under Willow Tree",
         text: "You encounter a spirit of Sadness, weeping beneath a willow tree. Dark blue tears fall from its ethereal form.",
