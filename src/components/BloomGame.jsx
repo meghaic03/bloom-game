@@ -13,6 +13,7 @@ import bedroomBackground from '/src/assets/bedroom.png';
 const BloomGame = () => {
     const [showFeedingMinigame, setShowFeedingMinigame] = useState(false);
     const [showMedicationMinigame, setShowMedicationMinigame] = useState(false);
+    const [showDoorScene, setShowDoorScene] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
     const [playerName, setPlayerName] = useState('');
     const [nameEntered, setNameEntered] = useState(false);
@@ -106,28 +107,30 @@ const BloomGame = () => {
 
     const scenes = {
         bedroom: {
-          image: "url('/src/assets/bedroom.png')",  // Changed this line only
-          text: !gameState.fedCat || !gameState.tookMedicine 
-              ? "Good morning [name]!"
-              : "",
-          choices: [
+            image: (gameState.fedCat && gameState.tookMedicine) 
+              ? "url('/src/assets/door.png')" 
+              : "url('/src/assets/bedroom.png')",
+            text: (gameState.fedCat && gameState.tookMedicine)
+              ? "You hear peculiar sounds coming from outside your door."
+              : "Good morning [name]!",
+            choices: [
               { 
-              text: "Feed Gumi", 
-              action: () => setShowFeedingMinigame(true),
-              hidden: gameState.fedCat
+                text: "Feed Gumi", 
+                action: () => setShowFeedingMinigame(true),
+                hidden: gameState.fedCat
               },
               { 
-              text: "Take medication", 
-              action: () => setShowMedicationMinigame(true),
-              hidden: gameState.tookMedicine
+                text: "Take medication", 
+                action: () => setShowMedicationMinigame(true),
+                hidden: gameState.tookMedicine
               },
               { 
-              text: "Open door to leave the room",
-              nextScene: "forest_entry",
-              hidden: !gameState.fedCat || !gameState.tookMedicine,
+                text: "Open door to leave the room",
+                nextScene: "forest_entry",
+                hidden: !gameState.fedCat || !gameState.tookMedicine,
               }
-          ]
-        },
+            ]
+          },
       forest_entry: {
         image: "Mystical Forest Entrance",
         text: "'[name], the forest needs your help. Plants are withering and we don't know why.' A distant voice echoes.",
@@ -406,6 +409,7 @@ const BloomGame = () => {
               onComplete={() => {
                 setShowFeedingMinigame(false);
                 completeTask('fedCat');
+                setShowDoorScene(gameState.tookMedicine); // Add this line
                 setCurrentScene('bedroom');
               }}
             />
@@ -420,6 +424,7 @@ const BloomGame = () => {
               onComplete={() => {
                 setShowMedicationMinigame(false);
                 completeTask('tookMedicine');
+                setShowDoorScene(gameState.fedCat); // Add this line
                 setCurrentScene('bedroom');
               }}
             />
