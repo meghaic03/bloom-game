@@ -72,8 +72,8 @@ const BloomGame = () => {
   
     const GameContainer = ({ children }) => (
       <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '960px', margin: '0 auto' }}>
-          <div className="h-[540px] relative overflow-hidden bg-gray-200">
+        <div style={{ width: '1050px', margin: '0 auto' }}>
+          <div className="h-[600px] relative overflow-hidden bg-gray-200">
             {children}
           </div>
         </div>
@@ -380,11 +380,11 @@ const BloomGame = () => {
               <div className="absolute inset-0 bg-black/0" /> {/* Adjust opacity (second num) as needed */}
               
               <div className="relative z-10"> {/* This ensures content appears above the overlay */}
-                <h1 className="text-4xl font-bold mb-4 font-['Cedarville_Cursive'] text-white">bloom</h1>
-                <p className="text-md mb-8 font-['Cedarville_Cursive'] text-white">a story game</p>
+                <h1 className="text-5xl font-bold mb-4 font-['Cedarville_Cursive'] text-white">bloom</h1>
+                <p className="text-lg mb-8 font-['Cedarville_Cursive'] text-white">a story game</p>
                 <Button 
                   onClick={() => setGameStarted(true)}
-                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-base py-3 px-10 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Play
                 </Button>
@@ -407,19 +407,19 @@ const BloomGame = () => {
               <div className="absolute inset-0 bg-black/10" /> */}
               
               <form onSubmit={handleNameSubmit} className="relative z-10 flex flex-col items-center gap-4">
-                <h2 className="text-2xl mb-2 font-['Cedarville_Cursive'] text-white">What is your name?</h2>
+                <h2 className="text-3xl mb-2 font-['Cedarville_Cursive'] text-white">What is your name?</h2>
                 <input
                   type="text"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-64 text-center bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-[#8C5751] border-dashed text-[#8C5751] font-['Cedarville_Cursive']"
+                  className="w-64 text-center bg-white/90 backdrop-blur-sm px-4 py-3 rounded-lg border-2 border-[#8C5751] border-dashed text-[#8C5751] font-['Cedarville_Cursive']"
                   placeholder="Enter your name"
                   autoFocus
                 />
                 <Button 
                   type="submit"
                   disabled={!playerName.trim()}
-                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-sm py-2 px-8 font-['Cedarville_Cursive'] rounded-lg"
+                  className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed text-base py-3 px-10 font-['Cedarville_Cursive'] rounded-lg"
                 >
                   Begin
                 </Button>
@@ -471,7 +471,7 @@ const BloomGame = () => {
                 <div className="flex flex-col gap-2 items-center">
                   {inventory.includes('blue flower') && <CloudRain className="w-4 h-4 text-blue-400" />}
                   {inventory.includes('yellow flower') && <Star className="w-4 h-4 text-yellow-400" />}
-                  {inventory.includes('red flower') && <Heart className="w-4 h-4 text-red-400" />}<div className="text-xs text-white mb-2 text-center w-full font-['Cedarville_Cursive']">Inventory</div>
+                  {inventory.includes('red flower') && <Heart className="w-4 h-4 text-red-400" />}<div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Inventory</div>
                 </div>
               </div>
             )}
@@ -479,7 +479,7 @@ const BloomGame = () => {
            {/* Vertical Forest Health Bar */}
             {isInForest(currentScene) && (
             <div className="bg-[#8C5751]0 p-2 rounded-xl backdrop-blur-sm w-16">
-                <div className="text-xs text-white mb-2 text-center w-full font-['Cedarville_Cursive']">Forest Health</div>
+                <div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Forest Health</div>
                 <div className="flex justify-center">
                 <div className="h-64 w-4 bg-[#E4D1B6] rounded-full overflow-hidden relative border-2 border-[#8C5751] border-dashed">
                     <div 
@@ -522,7 +522,7 @@ const BloomGame = () => {
             </div>
             ) : currentSceneData.text ? (
             <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
-                <p className="text-sm text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
+                <p className="text-lg text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
                 {processText(currentSceneData.text)}
                 </p>
             </div>
@@ -546,7 +546,7 @@ const BloomGame = () => {
                 <Button 
                     key={index}
                     onClick={() => handleChoice(choice)}
-                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-xs py-1 h-auto font-['Cedarville_Cursive']"
+                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
                     >
                     {processText(choice.text)}
                 </Button>

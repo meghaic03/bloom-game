@@ -143,10 +143,10 @@ const MedicationMinigame = ({ onComplete }) => {
         {/* Text box at bottom */}
         <div className="absolute bottom-4 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
           <div className="bg-[#E4D1B6]/80 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
-            <p className="text-sm text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
+            <p className="text-md text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
               {taskComplete 
-                ? "Take Medication\n\nAll done!" 
-                : "Take Medication\n\nDrag the pill and water to take your medication."}
+                ? "Take Medication\nAll done!" 
+                : "Take Medication\nDrag the pill and water to take your medication."}
             </p>
           </div>
         </div>
