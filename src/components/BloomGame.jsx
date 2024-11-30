@@ -13,6 +13,11 @@ import dead3Image from '/src/assets/dead3.png';
 import dead4Image from '/src/assets/dead4.png';
 import dead5Image from '/src/assets/dead5.png';
 import titleImage from '/src/assets/title.png';
+import flowersImage from '/src/assets/flowers.png';
+import bedroomflowersImage from '/src/assets/bedroomflowers.png';
+import redImage from '/src/assets/red.png';
+import blueImage from '/src/assets/blue.png';
+import yellowImage from '/src/assets/yellow.png';
 
 
 const BloomGame = () => {
@@ -72,8 +77,8 @@ const BloomGame = () => {
   
     const GameContainer = ({ children }) => (
       <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '1050px', margin: '0 auto' }}>
-          <div className="h-[600px] relative overflow-hidden bg-gray-200">
+        <div style={{ width: '1100px', margin: '0 auto' }}>
+          <div className="h-[650px] relative overflow-hidden bg-gray-200">
             {children}
           </div>
         </div>
@@ -90,7 +95,7 @@ const BloomGame = () => {
     const updateForestHealth = (flowerType) => {
       setGameState(prev => ({
         ...prev,
-        forestHealth: Math.min(100, prev.forestHealth + 33)
+        forestHealth: Math.min(100, prev.forestHealth + 34)
       }));
     };
   
@@ -325,24 +330,54 @@ const BloomGame = () => {
         ]
       },
       ending: {
-        image: "Bedroom with Flowers",
-        text: "You wake up in your bedroom.\n\n'Was this all a dream?'\n\nYou look in the mirror and see a new bouquet of flowers - blue, yellow, and red.\n\n'Maybe not.'",
+        image: `url(${bedroomflowersImage})`, 
+        text: "'Was this all a dream?'",
         choices: [
-          { text: "Reflect on your journey", nextScene: "final_thoughts" }
+          { text: "Click on the flowers", nextScene: "final_thoughts" }
         ]
       },
       final_thoughts: {
-        image: "Final Scene",
-        text: "Blue flower: 'Sadness is a part of me, but it doesn't define me. It makes the love I feel stronger.'\n\nYellow flower: 'I'm different from others. But that just means I have more to offer to the world'\n\nRed flower: 'Love was never something I had to prove—it was something I always carried. And now, I see the beauty in letting it bloom, both for others and myself.'",
+        image: `url(${flowersImage})`,
+        text: "'Maybe not.'",
         choices: [
-          { 
-            text: "End", 
-            nextScene: "credits"
-          }
+            { text: "Blue", nextScene: "blue" },
+            { text: "Yellow", nextScene: "yellow" },
+            { text: "Red", nextScene: "red" },
+            { text: "End", nextScene: "credits"}
         ]
       },
+      
+      red: {
+        image: `url(${redImage})`,
+        text: "Love was never something I had to prove—it was something I always carried. And now, I see the beauty in letting it bloom, both for others and myself.",
+        choices: [
+            { text: "Blue", nextScene: "blue" },
+            { text: "Yellow", nextScene: "yellow" },
+            { text: "End", nextScene: "credits"}
+        ]
+      },
+      yellow: {
+        image: `url(${yellowImage})`,
+        text: "I’m different from others. But that just means I have more to offer to the world.",
+        choices: [
+            { text: "Blue", nextScene: "blue" },
+            { text: "Red", nextScene: "red" },
+            { text: "End", nextScene: "credits"}
+        ]
+      },
+      blue: {
+        image: `url(${blueImage})`,
+        text: "Sadness is a part of me, but it doesn’t define me. It makes the love I feel stronger.",
+        choices: [
+            { text: "Yellow", nextScene: "yellow" },
+            { text: "Red", nextScene: "red" },
+            { text: "End", nextScene: "credits"}
+        ]
+      },
+
+
       credits: {
-        image: "",
+        image: `url(${titleImage})`,
         text: "",
         renderCustomContent: true,
         choices: []
