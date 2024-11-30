@@ -176,7 +176,7 @@ const BloomGame = () => {
       },
 
       coming_soon: {
-        image: "url('/src/assets/dead5.png')",  // You can keep the same background
+        image: ``, 
         text: "Coming soon...",
         choices: [
           { 
