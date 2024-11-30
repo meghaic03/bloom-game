@@ -170,11 +170,33 @@ const BloomGame = () => {
         choices: [
           { 
             text: "Enter the forest", 
-            action: () => setCurrentScene('meet_sadness')
+            action: () => setCurrentScene('coming_soon')
           }
         ]
       },
 
+      coming_soon: {
+        image: "url('/src/assets/dead5.png')",  // You can keep the same background
+        text: "Coming soon...",
+        choices: [
+          { 
+            text: "Return to title", 
+            action: () => {
+              setGameStarted(false);
+              setNameEntered(false);
+              setPlayerName('');
+              setGameState({
+                fedCat: false,
+                tookMedicine: false,
+                triedFlowers: false,
+                triedMusic: false,
+                triedPuzzle: false,
+                forestHealth: 0,
+              });
+            }
+          }
+        ]
+      },
 
       meet_sadness: {
         image: "Blue Spirit under Willow Tree",
