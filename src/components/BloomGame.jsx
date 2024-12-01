@@ -18,6 +18,8 @@ import bedroomflowersImage from '/src/assets/bedroomflowers.png';
 import redImage from '/src/assets/red.png';
 import blueImage from '/src/assets/blue.png';
 import yellowImage from '/src/assets/yellow.png';
+import healedforestImage from '/src/assets/healedforest.png';
+
 
 
 const BloomGame = () => {
@@ -40,7 +42,11 @@ const BloomGame = () => {
       forestHealth: 0,
     });
 
-   
+    const [viewedFlowers, setViewedFlowers] = useState({
+        red: false,
+        blue: false,
+        yellow: false
+      });
 
     const handleKeyPress = (e) => {
         if (e.key.toLowerCase() === 'x') {
@@ -105,7 +111,7 @@ const BloomGame = () => {
                            'sadness_accept', 'meet_misfit', 'misfit_explain', 
                            'misfit_reject', 'misfit_accept', 'meet_love',
                            'love_options', 'love_reject', 'love_minigame',
-                           'love_revelation'];
+                           'love_revelation', 'healed_forest'];
       return forestScenes.includes(scene);
     };
    
@@ -321,7 +327,7 @@ const BloomGame = () => {
         choices: [
           { 
             text: "Take the red flower",
-            nextScene: "ending",
+            nextScene: "healed_forest",
             action: () => {
               setInventory([...inventory, "red flower"]);
               updateForestHealth("red");
@@ -329,6 +335,15 @@ const BloomGame = () => {
           }
         ]
       },
+
+      healed_forest: {
+        image: `url(${healedforestImage})`,
+        text: "You look back, and the forest is transformed—vibrant, alive, and healed.",
+        choices: [
+            { text: "Go back home", nextScene: "ending" }
+          ]
+      },
+
       ending: {
         image: `url(${bedroomflowersImage})`, 
         text: "'Was this all a dream?'",
@@ -339,41 +354,38 @@ const BloomGame = () => {
       final_thoughts: {
         image: `url(${flowersImage})`,
         text: "'Maybe not.'",
+        renderCustomContent: true,
+        choices: [], // Remove default choices since we'll use custom boxes
+      },
+
+      endgame: {
+        image: `url(${flowersImage})`,
+        text: "",
         choices: [
-            { text: "Blue", nextScene: "blue" },
-            { text: "Yellow", nextScene: "yellow" },
-            { text: "Red", nextScene: "red" },
-            { text: "End", nextScene: "credits"}
+          { text: "End", nextScene: "credits" }
         ]
       },
       
       red: {
         image: `url(${redImage})`,
         text: "Love was never something I had to prove—it was something I always carried. And now, I see the beauty in letting it bloom, both for others and myself.",
-        choices: [
-            { text: "Blue", nextScene: "blue" },
-            { text: "Yellow", nextScene: "yellow" },
-            { text: "End", nextScene: "credits"}
-        ]
-      },
-      yellow: {
+        choices: [], // Remove the "Return to flowers" choice
+        onEnter: () => setViewedFlowers(prev => ({ ...prev, red: true }))
+    },
+    yellow: {
         image: `url(${yellowImage})`,
-        text: "I’m different from others. But that just means I have more to offer to the world.",
-        choices: [
-            { text: "Blue", nextScene: "blue" },
-            { text: "Red", nextScene: "red" },
-            { text: "End", nextScene: "credits"}
-        ]
-      },
-      blue: {
+        text: "I'm different from others. But that just means I have more to offer to the world.",
+        choices: [], // Remove the "Return to flowers" choice
+        onEnter: () => setViewedFlowers(prev => ({ ...prev, yellow: true }))
+    },
+    blue: {
         image: `url(${blueImage})`,
-        text: "Sadness is a part of me, but it doesn’t define me. It makes the love I feel stronger.",
-        choices: [
-            { text: "Yellow", nextScene: "yellow" },
-            { text: "Red", nextScene: "red" },
-            { text: "End", nextScene: "credits"}
-        ]
-      },
+        text: "Sadness is a part of me, but it doesn't define me. It makes the love I feel stronger.",
+        choices: [], // Remove the "Return to flowers" choice
+        onEnter: () => setViewedFlowers(prev => ({ ...prev, blue: true }))
+    },
+
+
 
 
       credits: {
@@ -393,10 +405,14 @@ const BloomGame = () => {
   
     const handleChoice = (choice) => {
         if (choice.action) {
-          choice.action();
+            choice.action();
         }
         if (choice.nextScene) {
-          setCurrentScene(choice.nextScene);
+            const nextSceneData = scenes[choice.nextScene];
+            if (nextSceneData.onEnter) {
+                nextSceneData.onEnter();
+            }
+            setCurrentScene(choice.nextScene);
         }
     };
   
@@ -563,31 +579,77 @@ const BloomGame = () => {
             </div>
             ) : null}
 
-          {/* Choices */}
-          <div className={`grid ${currentSceneData.choices.filter(choice => !choice.hidden).length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2 max-w-md w-full mx-auto`}>
-          {currentSceneData.choices.map((choice, index) => {
-              if (choice.hidden) {
-                return choice.requirementText ? (
-                  <Button 
-                    key={index}
-                    disabled
-                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm text-xs py-1 h-auto"
-                  >
-                    {choice.requirementText}
-                  </Button>
-                ) : null;
-              }
-              return (
-                <Button 
-                    key={index}
-                    onClick={() => handleChoice(choice)}
-                    className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
-                    >
-                    {processText(choice.text)}
-                </Button>
-              );
-            })}
-          </div>
+    {/* Choices */}
+    {(currentScene === 'final_thoughts' || currentScene === 'red' || currentScene === 'blue' || currentScene === 'yellow') ? (
+    <div className="flex flex-col gap-4 items-center">
+        <div className="grid grid-cols-3 gap-4 max-w-md w-full mx-auto">
+        <Button 
+            onClick={() => {
+            handleChoice({ nextScene: 'blue' });
+            }}
+            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
+            viewedFlowers.blue ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
+        >
+            Blue
+        </Button>
+        <Button 
+            onClick={() => {
+            handleChoice({ nextScene: 'yellow' });
+            }}
+            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
+            viewedFlowers.yellow ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
+        >
+            Yellow
+        </Button>
+        <Button 
+            onClick={() => {
+            handleChoice({ nextScene: 'red' });
+            }}
+            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
+            viewedFlowers.red ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
+        >
+            Red
+        </Button>
+        </div>
+        {(viewedFlowers.blue && viewedFlowers.yellow && viewedFlowers.red) && (
+        <Button 
+            onClick={() => setCurrentScene('credits')}
+            className="w-48 bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
+        >
+            The End
+        </Button>
+        )}
+    </div>
+    ) : (
+  
+  <div className={`grid ${currentSceneData.choices.filter(choice => !choice.hidden).length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2 max-w-md w-full mx-auto`}>
+    {currentSceneData.choices.map((choice, index) => {
+      if (choice.hidden) {
+        return choice.requirementText ? (
+          <Button 
+            key={index}
+            disabled
+            className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm text-xs py-1 h-auto"
+          >
+            {choice.requirementText}
+          </Button>
+        ) : null;
+      }
+      return (
+        <Button 
+          key={index}
+          onClick={() => handleChoice(choice)}
+          className="w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
+        >
+          {processText(choice.text)}
+        </Button>
+      );
+    })}
+  </div>
+)}
         </div>
       </div>
     </GameContainer>
