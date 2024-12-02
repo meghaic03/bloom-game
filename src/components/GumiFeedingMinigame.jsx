@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "./ui/button";
 
 // Import the necessary images
-import emptyFood from './emptyfood.png';
-import kibble from './kibble.png';
-import chicken from './chicken.png';
-import tuna from './tuna.png';
-import feedgumiBackground from './feedgumi.png';
+import emptyFood from '../assets/emptyfood.png';
+import kibble from '../assets/kibble.png';
+import chicken from '../assets/chicken.png';
+import tuna from '../assets/tuna.png';
+import feedgumiBackground from '../assets/feedgumi.png';
 
 const GameContainer = ({ children }) => (
   <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', backgroundColor: '#CCB093' }}>
