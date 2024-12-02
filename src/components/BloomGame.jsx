@@ -13,6 +13,7 @@ import dead3Image from '/src/assets/dead3.png';
 import dead4Image from '/src/assets/dead4.png';
 import dead5Image from '/src/assets/dead5.png';
 import titleImage from '/src/assets/title.png';
+import creditsImage from '/src/assets/credits.png';
 import flowersImage from '/src/assets/flowers.png';
 import bedroomflowersImage from '/src/assets/bedroomflowers.png';
 import redImage from '/src/assets/red.png';
@@ -338,10 +339,9 @@ const BloomGame = () => {
 
       healed_forest: {
         image: `url(${healedforestImage})`,
-        text: "You look back, and the forest is transformed—vibrant, alive, and healed.",
-        choices: [
-            { text: "Go back home", nextScene: "ending" }
-          ]
+        text: "You look back, and the forest is transformed—vibrant, alive, and healed. ",
+        renderCustomContent: true, 
+        choices: [] // Remove the choices array
       },
 
       ending: {
@@ -385,11 +385,8 @@ const BloomGame = () => {
         onEnter: () => setViewedFlowers(prev => ({ ...prev, blue: true }))
     },
 
-
-
-
       credits: {
-        image: `url(${titleImage})`,
+        image: `url(${titleImage})`, //creditsImage
         text: "",
         renderCustomContent: true,
         choices: []
@@ -514,11 +511,10 @@ const BloomGame = () => {
     <GameContainer>
       <div className="relative h-full flex flex-col justify-center">
         {/* Right Side UI Elements */}
-        {currentScene !== 'credits' && (
-          <div className="absolute right-4 top-4 bottom-4 flex flex-col items-end space-y-4">
+          <div className="absolute right-4 top-2 bottom-4 flex flex-col items-end space-y-4">
             {/* Inventory */}
             {inventory.length > 0 && (
-              <div className="bg-black/50 p-2 rounded-lg backdrop-blur-sm w-16">
+              <div className="bg-black/50 p-2 rounded-lg backdrop-blur-sm w-20">
                 <div className="flex flex-col gap-2 items-center">
                   {inventory.includes('blue flower') && <CloudRain className="w-4 h-4 text-blue-400" />}
                   {inventory.includes('yellow flower') && <Star className="w-4 h-4 text-yellow-400" />}
@@ -527,52 +523,102 @@ const BloomGame = () => {
               </div>
             )}
 
-           {/* Vertical Forest Health Bar */}
-            {isInForest(currentScene) && (
-            <div className="bg-[#8C5751]0 p-2 rounded-xl backdrop-blur-sm w-16">
-                <div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Forest Health</div>
-                <div className="flex justify-center">
-                <div className="h-64 w-4 bg-[#E4D1B6] rounded-full overflow-hidden relative border-2 border-[#8C5751] border-dashed">
-                    <div 
-                    className="w-4 bg-[#295011] transition-all duration-500 absolute bottom-0"
-                    style={{
-                        height: `${gameState.forestHealth}%`,
-                    }}
-                    />
-                </div>
-                </div>
+        {/* Vertical Forest Health Bar */}
+        {isInForest(currentScene) && (
+        <div className="bg-[#8C5751]0 p-2 rounded-xl backdrop-blur-sm w-16">
+            <div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Forest Health</div>
+            <div className="flex justify-center">
+            <div className="h-64 w-4 bg-[#E4D1B6] rounded-full overflow-hidden relative border-2 border-[#8C5751] border-dashed">
+                <div 
+                className="w-4 bg-[#295011] transition-all duration-500 absolute bottom-0"
+                style={{
+                    height: `${gameState.forestHealth}%`,
+                }}
+                />
             </div>
-            )}
-          </div>
+            </div>
+        </div>
         )}
-
-        {/* Background Image Description */}
-        <div 
-        className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm"
-        style={{
-            backgroundImage: currentScene === 'bedroom' || currentScene === 'dead_sequence' || currentScene === 'forest_entry' 
-            ? currentSceneData.image 
-            : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            imageRendering: 'pixelated'
-        }}
-        >
-        {(currentScene !== 'bedroom' && currentScene !== 'dead_sequence' && currentScene !== 'forest_entry') && 
-            <p className="text-center px-4">{currentSceneData.image}</p>
-        }
         </div>
 
+        {/* Background Image Description */}   
+        <div 
+            className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm"
+            style={{ 
+                backgroundImage: currentScene === 'bedroom' ||   //add scene here whenever adding a background image
+                                currentScene === 'dead_sequence' || 
+                                currentScene === 'forest_entry' ||
+                                currentScene === 'healed_forest' ||
+                                currentScene === 'red' ||
+                                currentScene === 'blue' ||
+                                currentScene === 'yellow' ||
+                                currentScene === 'ending' ||
+                                currentScene === 'final_thoughts' ||
+                                currentScene === 'credits'
+                    ? currentSceneData.image 
+                    : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                imageRendering: 'pixelated'
+            }}
+        >
+
+        {currentScene === 'healed_forest' && (
+        <>
+            {/* Inventory */}
+            <div className="absolute right-4 top-2 bg-black/50 p-2 rounded-lg w-20">
+                <div className="flex flex-col gap-2 items-center">
+                    <CloudRain className="w-4 h-4 text-blue-400" />
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    <Heart className="w-4 h-4 text-red-400" />
+                    <div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Inventory</div>
+                </div>
+            </div>
+
+            {/* Forest Health Bar */}
+            <div className="absolute right-4 top-32 bg-[#8C5751]0 p-2 rounded-xl  w-16">
+                <div className="text-sm text-white mb-3 text-center w-full font-['Cedarville_Cursive']">Forest Health</div>
+                <div className="flex justify-center">
+                    <div className="h-64 w-4 bg-[#E4D1B6] rounded-full overflow-hidden relative border-2 border-[#8C5751] border-dashed">
+                        <div 
+                            className="w-4 bg-[#295011] transition-all duration-500 absolute bottom-0"
+                            style={{
+                                height: '100%',
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
+    )}
+
+
+            {(currentScene !== 'bedroom' &&    //add scene here whenever adding a background image
+            currentScene !== 'dead_sequence' && 
+            currentScene !== 'forest_entry' &&
+            currentScene !== 'healed_forest' &&
+            currentScene !== 'red' &&
+            currentScene !== 'blue' &&
+            currentScene !== 'yellow' &&
+            currentScene !== 'ending' &&
+            currentScene !== 'final_thoughts' &&
+            currentScene !== 'credits' ) && 
+                <p className="text-center px-4">{currentSceneData.image}</p>
+            }
+        </div>
         {/* Bottom Section - Description and Choices */}
         <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
           {/* Description Text */}
           {currentScene === 'credits' ? (
             <div className="flex flex-col items-center text-lg font-bold">
-                <h1 className="mb-4 font-['Cedarville_Cursive']">thank you for playing</h1>
+                <h1 className="mb-4 font-['Cedarville_Cursive']">thank you for playing!</h1>
                 <p className="mb-48 text-lg font-['Cedarville_Cursive']">built by meghai</p>
             </div>
             ) : currentSceneData.text ? (
-            <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
+            <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full"
+            onClick={() => currentScene === 'healed_forest' ? setCurrentScene('ending') : null}
+            style={{ cursor: currentScene === 'healed_forest' ? 'pointer' : 'default' }}
+            >
                 <p className="text-lg text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
                 {processText(currentSceneData.text)}
                 </p>
@@ -583,7 +629,7 @@ const BloomGame = () => {
     {currentScene === 'ending' ? (
     <div 
         onClick={() => setCurrentScene('final_thoughts')}
-        className="absolute left-32 bottom-80 w-20 h-20 cursor-pointer hover:bg-white/10 border-2 border-[#8C5751] border-dashed rounded-lg transition-all"
+        className="absolute left-32 bottom-80 w-20 h-10 cursor-pointer transition-all"
       
     />
     ) : (currentScene === 'final_thoughts' || currentScene === 'red' || currentScene === 'blue' || currentScene === 'yellow') ? (
@@ -594,7 +640,7 @@ const BloomGame = () => {
             onClick={() => {
                 handleChoice({ nextScene: 'blue' });
             }}
-            className={`absolute right-80 bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+            className={`absolute right-80 bottom-40 w-10 h-20 cursor-pointer  ${ //hover:bg-white/10 border-2
                 viewedFlowers.blue ? 'border-white' : 'border-[#8C5751]'
             } border-dashed rounded-lg transition-all`}
      
@@ -604,7 +650,7 @@ const BloomGame = () => {
             onClick={() => {
                 handleChoice({ nextScene: 'yellow' });
             }}
-            className={`absolute right-72  bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+            className={`absolute right-72  bottom-40 w-5 h-10 cursor-pointer  ${ //hover:bg-white/10 border-2
                 viewedFlowers.yellow ? 'border-white' : 'border-[#8C5751]'
             } border-dashed rounded-lg transition-all`}
 
@@ -614,7 +660,7 @@ const BloomGame = () => {
             onClick={() => {
                 handleChoice({ nextScene: 'red' });
             }}
-            className={`absolute right-60 bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+            className={`absolute right-52 bottom-40 w-10 h-10 cursor-pointer  ${ //hover:bg-white/10 border-2
                 viewedFlowers.red ? 'border-white' : 'border-[#8C5751]'
             } border-dashed rounded-lg transition-all`}
 
