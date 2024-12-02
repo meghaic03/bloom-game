@@ -347,10 +347,10 @@ const BloomGame = () => {
       ending: {
         image: `url(${bedroomflowersImage})`, 
         text: "'Was this all a dream?'",
-        choices: [
-          { text: "Click on the flowers", nextScene: "final_thoughts" }
-        ]
-      },
+        renderCustomContent: true, // Add this to use custom rendering
+        choices: [] // Remove the regular choice since we'll use a custom target
+    },
+
       final_thoughts: {
         image: `url(${flowersImage})`,
         text: "'Maybe not.'",
@@ -567,9 +567,9 @@ const BloomGame = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
           {/* Description Text */}
           {currentScene === 'credits' ? (
-            <div className="flex flex-col items-center text-xl font-bold">
-                <h1 className="mb-2 font-['Cedarville_Cursive']">thank you for playing</h1>
-                <p className="text-lg font-['Cedarville_Cursive']">built by meghai</p>
+            <div className="flex flex-col items-center text-lg font-bold">
+                <h1 className="mb-4 font-['Cedarville_Cursive']">thank you for playing</h1>
+                <p className="mb-48 text-lg font-['Cedarville_Cursive']">built by meghai</p>
             </div>
             ) : currentSceneData.text ? (
             <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
@@ -580,45 +580,52 @@ const BloomGame = () => {
             ) : null}
 
     {/* Choices */}
-    {(currentScene === 'final_thoughts' || currentScene === 'red' || currentScene === 'blue' || currentScene === 'yellow') ? (
-    <div className="flex flex-col gap-4 items-center">
+    {currentScene === 'ending' ? (
+    <div 
+        onClick={() => setCurrentScene('final_thoughts')}
+        className="absolute left-32 bottom-80 w-20 h-20 cursor-pointer hover:bg-white/10 border-2 border-[#8C5751] border-dashed rounded-lg transition-all"
+      
+    />
+    ) : (currentScene === 'final_thoughts' || currentScene === 'red' || currentScene === 'blue' || currentScene === 'yellow') ? (
+        <div className="absolute inset-0">
         <div className="grid grid-cols-3 gap-4 max-w-md w-full mx-auto">
-        <Button 
+         {/* Blue target -  left */}
+         <div 
             onClick={() => {
-            handleChoice({ nextScene: 'blue' });
+                handleChoice({ nextScene: 'blue' });
             }}
-            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
-            viewedFlowers.blue ? 'border-white' : 'border-[#8C5751]'
-            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
-        >
-            Blue
-        </Button>
-        <Button 
+            className={`absolute right-80 bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+                viewedFlowers.blue ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed rounded-lg transition-all`}
+     
+        />
+        {/* Yellow target -  center */}
+        <div 
             onClick={() => {
-            handleChoice({ nextScene: 'yellow' });
+                handleChoice({ nextScene: 'yellow' });
             }}
-            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
-            viewedFlowers.yellow ? 'border-white' : 'border-[#8C5751]'
-            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
-        >
-            Yellow
-        </Button>
-        <Button 
+            className={`absolute right-72  bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+                viewedFlowers.yellow ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed rounded-lg transition-all`}
+
+        />
+       {/* Red target -  right */}
+       <div 
             onClick={() => {
-            handleChoice({ nextScene: 'red' });
+                handleChoice({ nextScene: 'red' });
             }}
-            className={`w-full bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 ${
-            viewedFlowers.red ? 'border-white' : 'border-[#8C5751]'
-            } border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']`}
-        >
-            Red
-        </Button>
+            className={`absolute right-60 bottom-40 w-5 h-5 cursor-pointer hover:bg-white/10 border-2 ${
+                viewedFlowers.red ? 'border-white' : 'border-[#8C5751]'
+            } border-dashed rounded-lg transition-all`}
+
+        />
         </div>
+        {/* End button only shows when all flowers are viewed */}
         {(viewedFlowers.blue && viewedFlowers.yellow && viewedFlowers.red) && (
         <Button 
             onClick={() => setCurrentScene('credits')}
-            className="w-48 bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
-        >
+            className="absolute bottom-40 left-1/2 -translate-x-1/2 w-48 bg-[#E4D1B6]/90 text-[#8C5751] rounded-lg border-2 border-[#8C5751] border-dashed backdrop-blur-sm hover:border-white text-md py-1 h-auto font-['Cedarville_Cursive']"
+            >
             The End
         </Button>
         )}
