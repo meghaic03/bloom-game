@@ -20,6 +20,9 @@ import redImage from '/src/assets/red.png';
 import blueImage from '/src/assets/blue.png';
 import yellowImage from '/src/assets/yellow.png';
 import healedforestImage from '/src/assets/healedforest.png';
+import transition1Image from '/src/assets/transition1.png';
+import transition2Image from '/src/assets/transition2.png';
+import transition3Image from '/src/assets/transition3.png';
 
 
 
@@ -28,6 +31,8 @@ const BloomGame = () => {
     const [showMedicationMinigame, setShowMedicationMinigame] = useState(false);
     const [showDoorScene, setShowDoorScene] = useState(false);
     const [deadImageIndex, setDeadImageIndex] = useState(0);
+    const [transitionIndex, setTransitionIndex] = useState(0);
+    const [showingTransition, setShowingTransition] = useState(false);
 
     const [gameStarted, setGameStarted] = useState(false);
     const [playerName, setPlayerName] = useState('');
@@ -48,38 +53,6 @@ const BloomGame = () => {
         blue: false,
         yellow: false
       });
-
-    const handleKeyPress = (e) => {
-        if (e.key.toLowerCase() === 'x') {
-          // Get all possible next scenes from current choices
-          const nextScenes = currentSceneData?.choices
-            ?.filter(choice => !choice.hidden)
-            .map(choice => choice.nextScene)
-            .filter(scene => scene);
-      
-          // If there's a next scene available, go to it
-          if (nextScenes && nextScenes.length > 0) {
-            const nextScene = nextScenes[0];
-            setTransitioning(true);
-            setOpacity(0);
-            
-            setTimeout(() => {
-              setCurrentScene(nextScene);
-              setTimeout(() => {
-                setOpacity(1);
-                setTransitioning(false);
-              }, 50);
-            }, 300);
-          }
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyPress);
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [currentScene]);
         
   
     const GameContainer = ({ children }) => (
@@ -340,13 +313,23 @@ const BloomGame = () => {
       healed_forest: {
         image: `url(${healedforestImage})`,
         text: "You look back, and the forest is transformed—vibrant, alive, and healed. ",
-        renderCustomContent: true, 
-        choices: [] // Remove the choices array
-      },
+        renderCustomContent: true,
+        choices: [],
+        onClick: () => {
+            setShowingTransition(true);
+            setTransitionIndex(0);
+            setTimeout(() => setTransitionIndex(1), 400);
+            setTimeout(() => setTransitionIndex(2), 800);
+            setTimeout(() => {
+                setShowingTransition(false);
+                setCurrentScene('ending');
+            }, 1600);
+        }
+    },
 
       ending: {
         image: `url(${bedroomflowersImage})`, 
-        text: "'Was this all a dream?'",
+        text: "'Was that all a dream?'",
         renderCustomContent: true, // Add this to use custom rendering
         choices: [] // Remove the regular choice since we'll use a custom target
     },
@@ -386,7 +369,7 @@ const BloomGame = () => {
     },
 
       credits: {
-        image: `url(${titleImage})`, //creditsImage
+        image: `url(${titleImage})`, //creditsImages
         text: "",
         renderCustomContent: true,
         choices: []
@@ -506,7 +489,24 @@ const BloomGame = () => {
           </GameContainer>
         );
       }
-
+      if (showingTransition) {
+        const transitionImages = [
+            transition1Image,
+            transition2Image,
+            transition3Image
+        ];
+    
+        return (
+            <GameContainer>
+                <div 
+                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
+                    style={{ 
+                        backgroundImage: `url(${transitionImages[transitionIndex]})`,
+                    }}
+                />
+            </GameContainer>
+        );
+    }
   return (
     <GameContainer>
       <div className="relative h-full flex flex-col justify-center">
@@ -559,7 +559,6 @@ const BloomGame = () => {
                     : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                imageRendering: 'pixelated'
             }}
         >
 
@@ -611,12 +610,12 @@ const BloomGame = () => {
           {/* Description Text */}
           {currentScene === 'credits' ? (
             <div className="flex flex-col items-center text-lg font-bold">
-                <h1 className="mb-4 font-['Cedarville_Cursive']">thank you for playing!</h1>
-                <p className="mb-48 text-lg font-['Cedarville_Cursive']">built by meghai</p>
+                <h1 className="mb-4 text-white font-['Cedarville_Cursive']">thank you for playing!</h1>
+                <p className="mb-48 text-lg text-white font-['Cedarville_Cursive']">built by meghai</p>
             </div>
             ) : currentSceneData.text ? (
             <div className="bg-[#E4D1B6]/90 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full"
-            onClick={() => currentScene === 'healed_forest' ? setCurrentScene('ending') : null}
+            onClick={() => currentScene === 'healed_forest' ? currentSceneData.onClick() : null}
             style={{ cursor: currentScene === 'healed_forest' ? 'pointer' : 'default' }}
             >
                 <p className="text-lg text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
