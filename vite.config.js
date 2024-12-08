@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   base: '/bloom/',
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['chunk-DRWLMN53', 'chunk-G3PMV62Z']
+  }
 })

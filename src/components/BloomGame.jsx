@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
-import { Heart, Star, CloudRain, Cat, TreePine } from 'lucide-react';
+import { Heart, Star, CloudRain, MessageCircle, Share } from 'lucide-react';
 import GumiFeedingMinigame from './GumiFeedingMinigame';
 import MedicationMinigame from './MedicationMinigame'; 
+
+import { db } from './firebase';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 import bedroomImage from '/src/assets/bedroom.png';
 import doorImage from '/src/assets/door.png';
@@ -27,6 +29,58 @@ import transition3Image from '/src/assets/transition3.png';
 
 
 const BloomGame = () => {
+  //likes shares and comments
+    const [likes, setLikes] = useState(0);
+    const [hasLiked, setHasLiked] = useState(false);
+    const [showCopied, setShowCopied] = useState(false);
+    
+    
+
+    const handleShare = () => {
+      navigator.clipboard.writeText('meghai.com/bloom');
+      setShowCopied(true);
+      setTimeout(() => {
+        setShowCopied(false);
+      }, 2000); // Show "Copied!" for 2 seconds
+    };
+
+    useEffect(() => {
+      const hasLikedBefore = localStorage.getItem('hasLikedBloom') === 'true';
+      setHasLiked(hasLikedBefore);
+    }, []);
+
+    useEffect(() => {
+      const fetchLikes = async () => {
+        const docRef = doc(db, 'game', 'bloom');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setLikes(docSnap.data().likes || 0);
+          }
+      };
+      fetchLikes();
+    }, []);
+    
+    const handleLike = async () => {
+      const docRef = doc(db, 'game', 'bloom');
+      if (hasLiked) {
+        await updateDoc(docRef, {
+          likes: increment(-1),
+        });
+        setLikes(prev => prev - 1);
+        setHasLiked(false);
+        localStorage.setItem('hasLikedBloom', 'false');
+      } else {
+        await updateDoc(docRef, {
+          likes: increment(1),
+        });
+        setLikes(prev => prev + 1);
+        setHasLiked(true);
+        localStorage.setItem('hasLikedBloom', 'true');
+      }
+    };
+    
+//end of likes and shares
+
     const [showFeedingMinigame, setShowFeedingMinigame] = useState(false);
     const [showMedicationMinigame, setShowMedicationMinigame] = useState(false);
     const [showDoorScene, setShowDoorScene] = useState(false);
@@ -94,7 +148,46 @@ const BloomGame = () => {
       return text.replace('[name]', playerName);
     };
   
+  //start of x to skip to next scene
+  
+  const [transitioning, setTransitioning] = useState(false);
+  const [opacity, setOpacity] = useState(1);
+  
+  const skipToNextScene = () => {
+    if (showFeedingMinigame) {
+      setShowFeedingMinigame(false);
+      completeTask('fedCat');
+      setCurrentScene('bedroom');
+      return;
+    }
+    
+    if (showMedicationMinigame) {
+      setShowMedicationMinigame(false);
+      completeTask('tookMedicine');
+      setCurrentScene('bedroom');
+      return;
+    }
+  
+    const currentChoices = currentSceneData?.choices?.filter(choice => !choice.hidden);
+    if (currentChoices && currentChoices.length > 0) {
+      const nextChoice = currentChoices[0];
+      if (nextChoice.action) nextChoice.action();
+      if (nextChoice.nextScene) setCurrentScene(nextChoice.nextScene);
+    }
+  };
+  
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key.toLowerCase() === 'x') {
+        skipToNextScene();
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [currentScene, showFeedingMinigame, showMedicationMinigame]);
 
+  //end of x to skip to next scene
 
 
     const scenes = {
@@ -508,6 +601,7 @@ const BloomGame = () => {
         );
     }
   return (
+    <div className="flex flex-col items-center min-h-screen">
     <GameContainer>
       <div className="relative h-full flex flex-col justify-center">
         {/* Right Side UI Elements */}
@@ -705,6 +799,64 @@ const BloomGame = () => {
         </div>
       </div>
     </GameContainer>
+
+    { (  
+      <div className="fixed right-4 bottom-4 flex flex-col gap-4">
+    <Button 
+      onClick={() => {
+        setGameStarted(false);
+        setNameEntered(false);
+        setCurrentScene('bedroom');
+        setInventory([]);
+        setGameState({
+          fedCat: false,
+          tookMedicine: false,
+          triedFlowers: false,
+          triedMusic: false,
+          triedPuzzle: false,
+          forestHealth: 0,
+        });
+        setViewedFlowers({
+          red: false,
+          blue: false,
+          yellow: false
+        });
+      }}
+      className="bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    </Button>
+
+      <Button 
+          onClick={handleLike}
+          className="bg-[#E4D1B6]/90 text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
+        >
+          <Heart className={`w-6 h-6 ${hasLiked ? 'fill-[#8C5751]' : 'stroke-[#8C5751]'}`} />
+          <span className="ml-2">{likes}</span>
+        </Button>
+      <Button 
+        onClick={() => window.open('/bloom/comments', '_blank')}
+        className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
+        >
+          <MessageCircle className="w-6 h-6" />
+        </Button>
+      <Button 
+        onClick={handleShare}
+        className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
+      >
+        {showCopied ? (
+          <span>Copied!</span>
+        ) : (
+          <Share className="w-6 h-6" />
+        )}
+      </Button>
+    </div>
+    )}
+
+
+  </div>
   );
 };
 
