@@ -147,48 +147,6 @@ const BloomGame = () => {
     const processText = (text) => {
       return text.replace('[name]', playerName);
     };
-  
-  //start of x to skip to next scene
-  
-  const [transitioning, setTransitioning] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  
-  const skipToNextScene = () => {
-    if (showFeedingMinigame) {
-      setShowFeedingMinigame(false);
-      completeTask('fedCat');
-      setCurrentScene('bedroom');
-      return;
-    }
-    
-    if (showMedicationMinigame) {
-      setShowMedicationMinigame(false);
-      completeTask('tookMedicine');
-      setCurrentScene('bedroom');
-      return;
-    }
-  
-    const currentChoices = currentSceneData?.choices?.filter(choice => !choice.hidden);
-    if (currentChoices && currentChoices.length > 0) {
-      const nextChoice = currentChoices[0];
-      if (nextChoice.action) nextChoice.action();
-      if (nextChoice.nextScene) setCurrentScene(nextChoice.nextScene);
-    }
-  };
-  
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key.toLowerCase() === 'x') {
-        skipToNextScene();
-      }
-    };
-  
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentScene, showFeedingMinigame, showMedicationMinigame]);
-
-  //end of x to skip to next scene
-
 
     const scenes = {
         bedroom: {
@@ -254,26 +212,9 @@ const BloomGame = () => {
       },
 
       coming_soon: {
-        image: ``, 
+        image: `url(${dead5Image})`, 
         text: "Coming soon...",
-        choices: [
-          { 
-            text: "Return to title", 
-            action: () => {
-              setGameStarted(false);
-              setNameEntered(false);
-              setPlayerName('');
-              setGameState({
-                fedCat: false,
-                tookMedicine: false,
-                triedFlowers: false,
-                triedMusic: false,
-                triedPuzzle: false,
-                forestHealth: 0,
-              });
-            }
-          }
-        ]
+        choices: []
       },
 
       meet_sadness: {
@@ -665,6 +606,7 @@ const BloomGame = () => {
                                 currentScene === 'dead_sequence' || 
                                 currentScene === 'forest_entry' ||
                                 currentScene === 'healed_forest' ||
+                                currentScene === 'coming_soon' ||
                                 currentScene === 'red' ||
                                 currentScene === 'blue' ||
                                 currentScene === 'yellow' ||
@@ -712,6 +654,7 @@ const BloomGame = () => {
             currentScene !== 'dead_sequence' && 
             currentScene !== 'forest_entry' &&
             currentScene !== 'healed_forest' &&
+            currentScene !== 'coming_soon' &&
             currentScene !== 'red' &&
             currentScene !== 'blue' &&
             currentScene !== 'yellow' &&
