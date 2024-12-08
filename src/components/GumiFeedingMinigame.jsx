@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "./ui/button";
 
 // Import the necessary images
-import emptyFood from './emptyfood.png';
-import kibble from './kibble.png';
-import chicken from './chicken.png';
-import tuna from './tuna.png';
-import feedgumiBackground from './feedgumi.png';
+import emptyFood from '../assets/emptyfood.png';
+import kibble from '../assets/kibble.png';
+import chicken from '../assets/chicken.png';
+import tuna from '../assets/tuna.png';
+import feedgumiBackground from '../assets/feedgumi.png';
 
 const GameContainer = ({ children }) => (
   <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', backgroundColor: '#CCB093' }}>
@@ -151,12 +151,12 @@ const GumiFeedingMinigame = ({ onComplete }) => {
         )}
 
         {/* Text box at bottom */}
-        <div className="absolute bottom-4 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
+        <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2 w-full flex flex-col items-center justify-center">
           <div className="bg-[#E4D1B6]/80 p-3 rounded-xl border-2 border-[#8C5751] border-dashed mx-auto max-w-md w-full">
-            <p className="text-sm text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
+            <p className="text-md text-[#8C5751] whitespace-pre-line font-['Cedarville_Cursive']">
               {isBowlComplete() 
-                ? "Feed Gumi\n\nGumi looks full!" 
-                : "Feed Gumi\n\nGumi needs one scoop of each type of food"}
+                ? "Feed Gumi\nGumi looks full!" 
+                : "Feed Gumi\nGumi needs one scoop of each type of food"}
             </p>
           </div>
         </div>
