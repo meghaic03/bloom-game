@@ -7,12 +7,12 @@ import TestPage from './components/test';
 
 function App() {
   return (
-    <Router basename="/bloom">      
+    <Router basename="/">      
       <div className="p-4">
         <Routes>
-          <Route path="/comments" element={<CommentsPage />} />
-          <Route path="/" element={<BloomGame />} />
-          <Route path="/test" element={<TestPage />} />
+          <Route path="bloom/comments" element={<CommentsPage />} />
+          <Route path="bloom" element={<BloomGame />} />
+          <Route path="bloom/test" element={<TestPage />} />
           {/*<Route path="/" element={<BloomGame />} />  Default route */}
         </Routes>
       </div>

@@ -7,6 +7,9 @@ import MedicationMinigame from './MedicationMinigame';
 import { db } from './firebase';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
+import { useNavigate } from "react-router";
+
+
 import bedroomImage from '/src/assets/bedroom.png';
 import doorImage from '/src/assets/door.png';
 import dead1Image from '/src/assets/dead1.png';
@@ -33,7 +36,8 @@ const BloomGame = () => {
     const [likes, setLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
     const [showCopied, setShowCopied] = useState(false);
-    
+    let navigate = useNavigate();
+
     
 
     const handleShare = () => {
@@ -802,7 +806,7 @@ const BloomGame = () => {
           <span className="ml-2">{likes}</span>
         </Button>
       <Button 
-        onClick={() => window.open('/bloom/comments', '_self')} //onClick={() => window.open('/bloom/comments', '_blank')}
+        onClick={() => navigate('/bloom/comments')} //onClick={() => window.open('/bloom/comments', '_blank')}
         className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
         >
           <MessageCircle className="w-6 h-6" />
