@@ -802,7 +802,7 @@ const BloomGame = () => {
           <span className="ml-2">{likes}</span>
         </Button>
       <Button 
-        onClick={() => window.open('/bloom/comments', '_blank')}
+        onClick={() => window.open('/bloom/comments', '_self')} //onClick={() => window.open('/bloom/comments', '_blank')}
         className="bg-[#E4D1B6]/90 hover:border-white text-[#8C5751] backdrop-blur-sm border-2 border-[#8C5751] border-dashed p-2 font-['Cedarville_Cursive'] rounded-lg"
         >
           <MessageCircle className="w-6 h-6" />
