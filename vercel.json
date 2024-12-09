@@ -1,8 +1,23 @@
 {
-    "rewrites": [
+    "routes": [
+      { 
+        "handle": "filesystem"
+      },
       {
-        "source": "/bloom/:path*",
-        "destination": "/index.html"
+        "src": "/bloom",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/bloom/test",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/bloom/comments",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/bloom/(.*)",
+        "dest": "/index.html"
       }
     ]
   }
