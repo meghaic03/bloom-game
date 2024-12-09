@@ -210,7 +210,7 @@ const BloomGame = () => {
         choices: [
           { 
             text: "Enter the forest", 
-            action: () => setCurrentScene('coming_soon')
+            action: () => setCurrentScene('meet_sadness')
           }
         ]
       },
